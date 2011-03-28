@@ -1,0 +1,17 @@
+Package: AnnotationFuncs
+Version: 0.99.9
+Date: 2010-11-29
+Title: Annotation translation functions
+Author: Stefan McKinnon Edwards <stefanm.edwards@agrsci.dk>
+Maintainer: Stefan McKinnon Edwards <stefanm.edwards@agrsci.dk>
+Depends: R (>= 2.7.0), AnnotationDbi
+Suggests: org.Bt.eg.db, GO.db
+Description: Functions for handling translating between different
+    identifieres using the Biocore Data Team data-packages (e.g.
+    org.Bt.eg.db).
+License: GPL-2
+URL: http://www.iysik.com/index.php?page=annotation-functions
+BugReports:
+biocViews: AnnotationData, Software
+Collate: annotation-funcs.R
+

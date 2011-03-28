@@ -1,0 +1,8 @@
+export(translate)
+export(pickRefSeq)
+export(pickRefSeq.Protein)
+export(pickRefSeq.mRNA)
+export(mapLists)
+export(removeNAs)
+export(pickGO)
+export(getEvidenceCodes)

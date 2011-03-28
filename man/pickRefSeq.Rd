@@ -1,0 +1,40 @@
+\name{pickRefSeq}
+\alias{pickRefSeq}
+\alias{pickRefSeq.mRNA}
+\alias{pickRefSeq.Protein}
+
+\title{Picks a prioritised RefSeq identifier from a list of identifiers...}
+\usage{pickRefSeq(l, priorities=c("NP", "XP", "NM", "XM"), reduce=c("all",
+    "first", "last"))
+pickRefSeq.mRNA(l)
+pickRefSeq.Protein(l)}
+
+\description{Picks a prioritised RefSeq identifier from a list of identifiers}
+\details{When translating to RefSeq, typically multiple identifiers are returned,
+referring to different types of products, such as genomic molecule, mature 
+mRNA or the protein, and they can be predicted, properties that can be read
+from the prefix (\url{http://www.ncbi.nlm.nih.gov/refseq/key.html}).  E.g. "XM_" is 
+predicted mRNA and "NP_" is a protein. Run \code{?org.Bt.egREFSEQ}.}
+\value{If vector given, returns vector.  If list given, returns list without element where nothing could be picked.}
+\author{Stefan McKinnon Edwards \email{stefanm.edwards@agrsci.dk}}
+\arguments{\item{l}{Vector or list of RefSeqs accessions to pick from.  If list given, applies the
+prioritation to each element in the list.}
+\item{priorities}{Character vector of prioritised prefixes to pick by. Eg. \code{c("NP","NM")}
+returns RefSeqs starting 'NP', and if none found, those starting 
+'NM'.  If no RefSeqs are found according to the priorities, Null
+is returned, unless the last element in priorities is '*'.  
+Uses grepl, so see these for pattern matching.  
+Default: c('NP','XP','NM','XM')}
+\item{reduce}{Reducing method, either return all annotations (one-to-many relation)
+or the first or last found annotation.  The reducing step is applied  
+after translating to the goal:                                       
+\code{all}: returns all annotations                                       
+\code{first} or \code{last}: choose first or last of arbitrarily ordered list.}}
+\examples{library(org.Bt.eg.db)
+symbols <- c("SERPINA1","KERA","CD5")
+refseq <- translate(symbols, from=org.Bt.egSYMBOL2EG, to=org.Bt.egREFSEQ)
+mRNA <- pickRefSeq(refseq, priorities=c('NM','XM'))
+proteins <- pickRefSeq(refseq, priorities=c('NP','XP'))
+# The same.
+mRNA <- pickRefSeq.mRNA(refseq)
+proteins <- pickRefSeq.Protein(refseq)}

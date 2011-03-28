@@ -1,0 +1,205 @@
+\documentclass[a4paper]{article}
+\usepackage{Rd}
+% \VignetteIndexEntry{Annotation mapping functions}
+% \VignetteDepends{AnnotationDbi}
+
+\title{Annotation mapping functions}
+\author{Stefan McKinnon Edwards \\ Faculty of Agricultural Sciences, Aarhus University}
+\date{\today}
+\begin{document}
+\maketitle
+\tableofcontents
+
+
+
+
+\section{Introduction}
+The Bioconductor\cite{BioC} contains over 500 packages for annotational data (as of release 2.7), 
+containing all gene data, chip data for microarrays or homology data. These packages can be used
+to map between different types of annotations, such as RefSeq\cite{RefSeq}, Entrez or Ensembl\cite{Hubbard01012009},
+but also pathways such as KEGG\cite{Kanehisa}\cite{Kanehisa01012000}\cite{Kanehisa01012010} og Gene Ontology\cite{GO}.
+This package contains functions for mapping between different annotations using the Bioconductors annotations packages
+and can in most cases be done with a single line of code.
+
+\subsection{Types of Annotation Packages}
+Bioconductors website on the annotation packages\footnote{http://www.bioconductor.org/help/workflows/annotation-data/}
+lists five different types of annotation packages. Here, we list some of them:
+\begin{itemize}
+	\item org.``XX''.``yy''.db - organism annotation packages containing all the gene data for en entire organism, 
+		where ``XX'' is the abbreviation for Genus and species.
+		``yy'' is the \emph{central ID} that binds the data together, such as Entrez gene (eg).
+	\item KEGG.db and GO.db containing systems biology data / pathways.
+	\item hom.``XX''.inp.db - homology packages mapping gene between an organism and 35 other.
+	\item Chip annotation packages for accessing data for e.g. Affymetrix chips.
+\end{itemize}
+
+\subsection{Why this package?}
+Querying the annotation packages for data is easy, as demonstrated below:
+<<>>=
+library(org.Bt.eg.db)
+genes <- c('280705', '280706', '100327208')
+symbols <- org.Bt.egSYMBOL[genes]
+toTable(symbols)
+@
+However, if we were to query for a non-existing gene, 
+\begin{Schunk}
+\begin{Sinput}
+>  org.Bt.egSYMBOL[c("280705",  "280706",  "100327208",  "123")]
+\end{Sinput}
+\begin{Soutput}
+Error  in  .checkKeys(value,  Lkeys(x),  x@ifnotfound)  :
+  value  for  "123"  not  found
+\end{Soutput}
+\end{Schunk}
+or try to map from a symbol to e.g. RefSeq, things become a bit more difficult:
+<<>>=
+symbols <- c('BCSE','TF','TG')
+entrez <- org.Bt.egSYMBOL2EG[symbols]
+entrez <- toTable(entrez)[,'gene_id']
+entrez
+refseq <- org.Bt.egREFSEQ[entrez]
+toTable(refseq)
+@
+Note here, that the central ID in \code{org.Bt.eg.db} is \emph{Entrez Gene ID} 
+as indicated by the ''eg'' in the package name. This means that all annotational data
+is linked together by an Entrez Gene ID. Therefore to map from e.g. symbols to RefSeq, 
+it is neccesary to map to Entrez first and then to RefSeq. The consequence of this is 
+that elements can be lost in the mapping.
+
+
+With this package, it can be done with one-liners:
+<<>>=
+library(AnnotationFuncs)
+translate(c(280705, 280706, 100327208, 123), org.Bt.egSYMBOL)
+translate(c('BCSE','TF','TG'), from=org.Bt.egSYMBOL2EG, to=org.Bt.egREFSEQ)
+@
+Note that the elements that could not be mapped to the end product are removed (by option).
+
+\section{Usage guide}
+First things first, we will start by describing the most usefull of functions: \code{translate}.
+After this we will cover the other functions that are intended for Gene Ontology pathways (GO) and RefSeq.
+
+Please note, that throughout this chapter, we use \code{org.Bt.eg.db}, but the annotation package is 
+more or less interchangable with the other annotation packages from Bioconductor. However, when we refer to
+the annotation types (e.g. \code{org.Bt.egCHR} or \code{org.Bt.egREFSEQ}), the package cannot be directly replaced
+by another, so you must check which types are available for the package.
+
+\subsection{translate}
+To map between different types of annotation data, you must first choose an annotation package for
+the appropiate organism. For cows there is the \code{org.Bt.eg.db} that maps between different identifers
+or \code{bovine.db} that maps the probes on an Affymatrix bovine chip. For humans there is also \code{org.Hs.eg.db},
+\code{hgu95av2.db} for Affymetrix Human Genome U95 Set annotation data or \code{hom.Hs.inp.db} that maps
+homologues genes from human to 35 other organims. 
+
+For \code{org.Bt.eg.db} there is a data object for each set of data, such as mapping from Entrez Gene IDs
+to chromosome, \code{org.Bt.egCHR}. Some of the objects comes in pairs, such as
+Entrez and RefSeq there is \code{org.Bt.egREFSEQ} and \code{org.Bt.egREFSEQ2EG}. The latter can also be obtained with
+\code{revmap(org.Bt.egREFSEQ)}.
+Note that the mapping is generally from the central ID (Entrez Gene ID in this case) to the end product.
+
+We start of by getting some basic information about some Entrez Gene IDs:
+<<>>=
+library(AnnotationFuncs)
+library(org.Bt.eg.db)
+genes <- c(280705, 280706, 100327208)
+translate(genes, org.Bt.egGENENAME)
+translate(genes, org.Bt.egCHR)
+translate(genes, org.Bt.egENSEMBL)
+translate(genes, org.Bt.egREFSEQ, remove.missing=F)
+@
+This is however trivial, but not the last example how the non-mapped was included in the result.
+The first argument is coerced into a character vector of unique entries, so providing a list will do no good 
+(unless you use the function \code{unlist}).
+
+Now we would like to map from something else than the central ID to the central ID and to a third annotation:
+<<>>=
+symbols <- c("SERPINA1","KERA","CD5")
+translate(symbols, org.Bt.egSYMBOL2EG)
+translate(symbols, revmap(org.Bt.egSYMBOL))
+@
+The two results should be exactly the same. 
+
+To map to a third annotation, we specify a object for the mapping to the central ID and another object for
+the mapping from the central ID to the end product:
+<<>>=
+translate(symbols, from=org.Bt.egSYMBOL2EG, to=org.Bt.egGENENAME)
+# As a curiosity, if you specify another organism, you are warned:
+library(org.Hs.eg.db)
+translate(symbols, from=org.Bt.egSYMBOL2EG, to=org.Hs.egGENENAME)
+warnings()
+@
+
+If you specify an annotation type that can map to multiple entries,  
+you can use the argument \code{reduce} to specify how the result is reduced.
+The options are \code{all} (default), that does not reduce, \code{first} that
+only selects the arbitrarily first element and \code{last} that does the same on the last element in the set.
+<<>>=
+symbols <- c("SERPINA1","KERA","CD5")
+translate(symbols, org.Bt.egSYMBOL2EG, org.Bt.egREFSEQ)
+translate(symbols, org.Bt.egSYMBOL2EG, org.Bt.egREFSEQ, reduce='first')
+translate(symbols, org.Bt.egSYMBOL2EG, org.Bt.egREFSEQ, reduce='last')
+@
+
+And finally, if you for some reason needed the result on matrix form, there is the argument
+\code{return.list}:
+<<>>=
+translate(symbols, org.Bt.egSYMBOL2EG, org.Bt.egREFSEQ, return.list=F)
+@
+
+\subsection{RefSeq}
+As noted in the previous section, a single gene can map to several RefSeq identifiers. The format of 
+the RefSeq identifier differs depending on the type, but they can be recognized on their prefix.
+For instance, RefSeq identifiers starting with `NM\_' are mature mRNA transcripts and `XP\_' are model proteins.
+A thorough explanation can be found by executing \code{?org.Bt.egREFSEQ} or on NCBIs website for 
+RefSeq\footnote{http://www.ncbi.nlm.nih.gov/projects/RefSeq/key.html}.
+
+To be able to sort the result from \code{translate} (or a character vector of RefSeq identifiers in general), 
+the function \code{pickRefSeq}. It uses string comparisons to select the correct identifiers, so options are 
+not limited to those shown here.
+<<>>=
+symbols <- c("SERPINA1","KERA","CD5")
+refseq <- translate(symbols, from=org.Bt.egSYMBOL2EG, to=org.Bt.egREFSEQ)
+mRNA <- pickRefSeq(refseq, priorities=c('NM','XM'))	# Equals pickRefSeq.mRNA
+mRNA
+proteins <- pickRefSeq(refseq, priorities=c('NP','XP')) # Equals pickRefSeq.Protein
+proteins
+@
+
+If used in a context where each element must be mapped to exactly one, the argument \code{reduce} can be supplied here
+as in \code{translate}.
+
+\subsection{Gene Ontology}
+The annotation packages can map to pathways; either Gene Ontology (GO) or KEGG.
+Using org.Bt.egGO makes things a bit more complicated, as each GO identifier is accompanied by
+an evidence and category code.
+We therefore supply the function \code{pickGO} to pick the correct pathway based on category 
+(biological process, molecular function and/or cellular component) and evidence (typically how they were inferred).
+<<eval=FALSE>>=
+symbols <- c("SERPINA1","KERA","CD5")
+GOs <- translate(symbols, from=org.Bt.egSYMBOL2EG, to=org.Bt.egGO)
+# Pick biological process:
+pickGO(GOs, category='BP')
+# Pick only those biological processes for Entrez Gene ID 280730
+# which have been inferred from sequence similarity or electronic annotation:
+pickGO(translate(280730, org.Bt.egGO), category='BP', evidence=c('ISS','IEA'))
+@
+
+If a GO object is used as the \code{from} argument in \code{translate} for further mapping,
+the arguments \code{evidence} and \code{category} can be applied to \code{translate} to 
+filter the intermediate product before mapping to the end product.
+
+The evidence codes can be found by executing \code{?org.Bt.egGO} or \code{getEvidenceCodes()}.
+
+
+\section{What was used to create this document}
+The version number of R and the packages and their versions that were used to generate this
+document are listed below.
+<<>>=
+toLatex(sessionInfo())
+@
+
+\section{References}
+\bibliographystyle{plain}
+\bibliography{biblio}
+
+\end{document}
