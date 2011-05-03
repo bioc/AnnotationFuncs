@@ -7,3 +7,4 @@
 Good for use after \code{\link{mapLists}} that might return entries equal \code{NA}.}
 \author{Stefan McKinnon Edwards \email{stefanm.edwards@agrsci.dk}}
 \arguments{\item{l}{Vector or list.}}
+\examples{removeNAs(list('a'=NA, 'b'=c(NA, 'B'), 'c'='C'))}

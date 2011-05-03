@@ -35,7 +35,9 @@
 #         are the given values that could be translated. The function works    
 #         on lists, so this is just as easy to return.
 #         When \code{FALSE}, a table.  Convenience for calling on the result.             
-#' @param remove.missing Boolean, whether to remove non-translated values, defaults \code{TRUE}.
+#' @param remove.missing Logical, whether to remove non-translated values, defaults \code{TRUE}.
+#' @param simplify Logical, unlists the result. Defaults to FALSE. Usefull when using \code{translate} in 
+#'                 a \code{lapply} or \code{sapply}.
 #' @param ... Additional arguments sent to \code{\link{pickGO}} if \code{from} returns GO set.
 #' @return List; names of elements are \code{values} and the elements are the translated elements,
 #'        or \code{NULL} if not translatable with \code{remove.missing = TRUE}.
@@ -63,8 +65,9 @@
 #' pickGO(GO, evidence=c('IMP','IGI','IPI','ISS','IDA','IEP','IEA'))
 translate <- function(values, from, to=NULL, 
                       reduce=c('all','first','last'), 
-                      return.list = T,
-                      remove.missing=T, 
+                      return.list = TRUE,
+                      remove.missing=TRUE, 
+					  simplify=FALSE,
 					  ...) {
   # Roadmap:
   # Check validity of attributes. 
@@ -123,7 +126,7 @@ translate <- function(values, from, to=NULL,
   ###
   # Translate all primary ids to goal annotation 
   ###
-  if (is.null(to) == F) {
+  if (is.null(to) == FALSE) {
 	# Check for special case where the from-package is into GO.
 	# If it is, then the primary must be reduced to only the GO identifiers and not the set of GO ID, evidence and category.
 	isGO <- FALSE
@@ -137,7 +140,7 @@ translate <- function(values, from, to=NULL,
     # Map all goal-annotations to the starting annotations:
     # lapply over primary, so we get primary's names.
     goal <- lapply(primary, function(x) {
-        x <- unlist(goal[x], use.names=F) # x is vector, so we get all entries in goal for all x.
+        x <- unlist(goal[x], use.names=FALSE) # x is vector, so we get all entries in goal for all x.
         if (length(x) == 0 || is.na(x[1])) 
           return(NA)
         x <- pickOne(x)
@@ -167,6 +170,7 @@ translate <- function(values, from, to=NULL,
   # Return result if a list is desired, 
   # else unstack to a table.
   ###
+  if (simplify) return(unlist(goal, use.names=FALSE))
   if (return.list) {
     return(goal)
   } else {
@@ -248,7 +252,7 @@ pickRefSeq <- function(l, priorities=c('NP','XP','NM','XM'),
   # Get prioritised element, by iterating over 'priorities' and grepping by it.
   ###
   for (p in priorities) {
-    res <- grep(p, l, ignore.case=T, value=T)
+    res <- grep(p, l, ignore.case=TRUE, value=TRUE)
     if (length(res) > 0) break
   }
   if (length(res) == 0) return(NULL)
@@ -296,7 +300,7 @@ pickRefSeq.mRNA <- function(l) {
 #' B <- list('alpha'='b1', 'gamma'=c('b2', 'b3'), 'delta'='b4')
 #' mapLists(A, B) 
 #  # Returns: list('a1'='b1', 'a2'=NA, 'a3'=c('b2','b3','b4'))
-mapLists <- function(A, B, removeNAs=T) {
+mapLists <- function(A, B, removeNAs=TRUE) {
   res <- lapply(A, function(x) {
     x <- unlist(B[as.character(x)], use.names=F)
     if (length(x) == 0 || is.na(x[1])) return(NA)
@@ -313,7 +317,7 @@ mapLists <- function(A, B, removeNAs=T) {
 #' @param l Vector or list.
 #' @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
 #' @export
-#' @exampels
+#' @examples
 #' removeNAs(list('a'=NA, 'b'=c(NA, 'B'), 'c'='C'))
 removeNAs <- function(l) { return(l[!is.na(l)]) }
 
@@ -348,7 +352,7 @@ pickGO <- function(l, evidence=NA, category=NA) {
 	
 	if (length(l) == 3) {
 		if (names(l) == c('GOID','Evidence','Ontology')) {
-			if (is.list(l)) l <- unlist(l, use.names=F)
+			if (is.list(l)) l <- unlist(l, use.names=FALSE)
 			if (is.na(evidence)) evidence = l[2]
 			if (is.na(category)) category = l[3]
 			if (l[2] %in% evidence & l[3] %in% category) return(l[1])
@@ -357,7 +361,7 @@ pickGO <- function(l, evidence=NA, category=NA) {
 	}
     if (all(substr(names(l), 1, 3) == 'GO:')) {
 		gos <- l[which(substr(names(l), 1, 3) == 'GO:')]
-		gos <- matrix(unlist(gos, use.names=F), ncol=3, byrow=T)
+		gos <- matrix(unlist(gos, use.names=FALSE), ncol=3, byrow=TRUE)
 		if (is.na(evidence)) {
 			from.evi <- rep(TRUE, nrow(gos))
 		} else {
@@ -394,5 +398,5 @@ getEvidenceCodes <- function() {
 				'NAS','non-traceable author statement',
 				'ND','no biological data available',
 				'IC','inferred by curator ')
-	return(matrix(codes, ncol=2, byrow=T, dimnames=list(c(), c('Code','Description'))))
+	return(matrix(codes, ncol=2, byrow=TRUE, dimnames=list(c(), c('Code','Description'))))
 }
