@@ -1,6 +1,6 @@
-#' Performs quicker lookup in homologe data packages
+#' Performs quicker lookup for orthologs in homologe data packages
 #'
-#' Using the INPARANOID data packages such as \code{hom.Hs.inp.db} is very, very slow and can take up to 11 min (on the developers workstation).
+#' Using the INPARANOID data packages such as \code{hom.Hs.inp.db} is very, very slow and can take up to 11 min (on this particular developers workstation).
 #' This function introduces a new method that can do it in just 20 seconds (on the developers workstation).
 #' In addition, it includes options for translating between different identifers both before and after the mapping.
 #' 
@@ -9,10 +9,12 @@
 #' @param genus Character vector. 5 character INPARANOID style genus name of the mapping object, e.g. 'BOSTA' for both \code{hom.Hs.inpBOSTA} and \code{revmap(hom.Hs.inpBOSTA)}.
 #' @param thershold Numeric value between 0 and 1. Only clustered homologues with a parwise score above the threshold is included.
 #'                  The native implementation has this set to 1.
-#' @param from Mapping object if \code{values} needs translation before mapping. 
+#' @param pre.from Mapping object if \code{values} needs translation before mapping. 
 #'             E.g. \code{values} are entrez and \code{hom.Hs.inpBOSTA} requires ENSEMBLPROT, \code{hom.Hs.inpAPIME} requires Refseq (?).
 #'             Arguments \code{from} and \code{to} are just like in \code{\link{translate}}.
-#' @param to Translate the result from homology mapping to a desired id; just like in \code{\link{translate}}.
+#' @param pre.to Second part of translation before mapping.
+#' @param post.from Translate the result from homology mapping to a desired id; just like in \code{\link{translate}}.
+#' @param post.to Second part of translation after mapping.
 #' @param ... Additional arguments sent to \code{\link{translate}}.
 #' @return List. Names of list corresponds to \code{values}, except those that could not be mapped nor translated.
 #'               Entries are character vectors.
@@ -37,9 +39,9 @@
 #' library(hom.Hs.inp.db)
 #' library(org.Hs.eg.db)
 #' library(org.Bt.eg.db)
-#' getHomolog("ENSBTAP00000024572", revmap(hom.Hs.inpBOSTA), 'BOSTA') 
+#' getOrthologs("ENSBTAP00000024572", revmap(hom.Hs.inpBOSTA), 'BOSTA') 
 #' # And now, we will map from entrez genes 1, 2 and 3 to bovine Refseq
-#' bovine.ensembl <- getHomolog(c(1,2,3), hom.Hs.inpBOSTA, 'BOSTA', from=org.Hs.egENSEMBLPROT, to=org.Bt.egENSEMBLPROT2EG)
+#' bovine.ensembl <- getOrthologs(c(1,2,3), hom.Hs.inpBOSTA, 'BOSTA', from=org.Hs.egENSEMBLPROT, to=org.Bt.egENSEMBLPROT2EG)
 #' refseqs <- translate(unlist(bovine.ensembl, use.names=F), org.Bt.egREFSEQ)
 #' hs2bt.refseqs <- mapLists(bovine.ensembl, refseqs)
 #' # Another way of doing it:
@@ -57,7 +59,10 @@
 #threshold <- 1
 #tbl <- 'Bos_taurus'
 
-getHomolog <- function(values, mapping, genus, threshold=1, from=NULL, to=NULL, ...) {
+getOrthologs <- function(values, mapping, genus, threshold=1, 
+		pre.from=NULL, pre.to=NULL, 
+		post.from=NULL, post.to=NULL, 
+		...) {
     values <- as.character(values)
     values <- unique(values)
     
@@ -65,8 +70,8 @@ getHomolog <- function(values, mapping, genus, threshold=1, from=NULL, to=NULL, 
     threshold <- max(0, min(threshold, 1))
         
     # Check if we do some translating first:
-    if (!is.null(from)) {
-        trans1 <- translate(values, from, ...)
+    if (!is.null(pre.from)) {
+        trans1 <- translate(values, pre.from, pre.to, ...)
         values <- unlist(trans1, use.names=F)
     }
     
@@ -104,11 +109,11 @@ getHomolog <- function(values, mapping, genus, threshold=1, from=NULL, to=NULL, 
     #res.list <- unstack(res, res$inp_id ~ res$id1)
     res.list <- split(res$inp_id, f=factor(res$id1, levels=unique(res$id1)))
     
-    if (!is.null(from)) {
+    if (!is.null(pre.from)) {
         res.list <- mapLists(trans1, res.list)
     }
-    if (!is.null(to)) {
-        trans2 <- translate(res$inp_id, to, ...)
+    if (!is.null(post.from)) {
+        trans2 <- translate(res$inp_id, post.from, post.to, ...)
         res.list <- mapLists(res.list, trans2)
     }
     res.list <- lapply(res.list, unique)
@@ -128,7 +133,6 @@ getHomolog <- function(values, mapping, genus, threshold=1, from=NULL, to=NULL, 
 #'  @param genus 5 character INPARANOID genus name.
 #'  @return Table name for genus.
 #'  @references \url{http://www.bioconductor.org/packages/release/bioc/html/AnnotationDbi.html}
-#'  @export
 #'  @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
 #'  @examples
 #'  getTableName('BOSTA')

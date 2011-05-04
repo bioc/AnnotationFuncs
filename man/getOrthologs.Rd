@@ -28,10 +28,12 @@ Automatic clustering of orthologs and in-paralogs from pairwise species comparis
 \item{genus}{Character vector. 5 character INPARANOID style genus name of the mapping object, e.g. 'BOSTA' for both \code{hom.Hs.inpBOSTA} and \code{revmap(hom.Hs.inpBOSTA)}.}
 \item{thershold}{Numeric value between 0 and 1. Only clustered homologues with a parwise score above the threshold is included.
 The native implementation has this set to 1.}
-\item{from}{Mapping object if \code{values} needs translation before mapping. 
+\item{pre.from}{Mapping object if \code{values} needs translation before mapping. 
 E.g. \code{values} are entrez and \code{hom.Hs.inpBOSTA} requires ENSEMBLPROT, \code{hom.Hs.inpAPIME} requires Refseq (?).
 Arguments \code{from} and \code{to} are just like in \code{\link{translate}}.}
-\item{to}{Translate the result from homology mapping to a desired id; just like in \code{\link{translate}}.}
+\item{pre.to}{Second part of translation before mapping.}
+\item{post.from}{Translate the result from homology mapping to a desired id; just like in \code{\link{translate}}.}
+\item{post.to}{Second part of translation after mapping.}
 \item{...}{Additional arguments sent to \code{\link{translate}}.}}
 \examples{library(hom.Hs.inp.db)
 library(org.Hs.eg.db)
