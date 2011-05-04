@@ -2,7 +2,7 @@
 \alias{translate}
 \title{Translate between different identifiers...}
 \usage{translate(values, from, to, reduce=c("all", "first", "last"),
-    return.list=T, remove.missing=T, ...)}
+    return.list=TRUE, remove.missing=TRUE, simplify=FALSE, ...)}
 \description{Translate between different identifiers}
 \details{Function for translating from one annotation to another, eg. from RefSeq to  
 Ensemble.  This function takes a vector of annotation values and translates     
@@ -37,7 +37,9 @@ after translating to the goal:
 \code{all}: returns all annotations                                       
 \code{first} or \code{last}: choose first or last of arbitrarily ordered list.}
 \item{return.list}{Logical, when \code{TRUE}, returns the translation as a list where names}
-\item{remove.missing}{Boolean, whether to remove non-translated values, defaults \code{TRUE}.}
+\item{remove.missing}{Logical, whether to remove non-translated values, defaults \code{TRUE}.}
+\item{simplify}{Logical, unlists the result. Defaults to FALSE. Usefull when using \code{translate} in 
+a \code{lapply} or \code{sapply}.}
 \item{...}{Additional arguments sent to \code{\link{pickGO}} if \code{from} returns GO set.}}
 \examples{library(org.Bt.eg.db)
 genes <- c(280705, 280706, 100327208)

@@ -4,8 +4,8 @@
 \details{\tabular{ll}{
 Package:  \tab  AnnotationFuncs\cr
 Type:  \tab  Package\cr
-Version:  \tab  0.1.3 \cr
-Date:  \tab  2011-01-12\cr
+Version:  \tab  1.1.2 \cr
+Date:  \tab  2011-05-04\cr
 License:  \tab  Artistic (>=  2)\cr
 LazyLoad:  \tab  yes\cr
 }
