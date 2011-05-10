@@ -19,7 +19,7 @@ Other functions include functions for selecting Refseqs or Gene Ontologies (GO).
 \author{Stefan McKinnon Edwards  \email{stefanm.edwards@agrsci.dk}}
 \references{\url{http://www.iysik.com/}}
 \keyword{package}
-\seealso{\code{\link{translate}}}
+\seealso{\code{\link{translate}}, \code{\link{getOrthologs}}}
 \note{Requires user to deliver the annotation packages such as \code{org.Bt.egREFSEQ}.}
 \examples{library(org.Bt.eg.db)
 gene.symbols <- c('DRBP1','SERPINA1','FAKE','BLABLA')

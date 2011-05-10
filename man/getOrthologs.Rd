@@ -1,7 +1,7 @@
-\name{getHomolog}
-\alias{getHomolog}
+\name{getOrthologs}
+\alias{getOrthologs}
 \title{Performs quicker lookup in homologe data packages...}
-\usage{getHomolog(values, mapping, genus, threshold=1, from, to, ...)}
+\usage{getOrthologs(values, mapping, genus, threshold=1, pre.from, pre.to, post.from, post.to, ...)}
 \description{Performs quicker lookup in homologe data packages}
 \details{Using the INPARANOID data packages such as \code{hom.Hs.inp.db} is very, very slow and can take up to 11 min (on the developers workstation).
 This function introduces a new method that can do it in just 20 seconds (on the developers workstation).
@@ -38,9 +38,9 @@ Arguments \code{from} and \code{to} are just like in \code{\link{translate}}.}
 \examples{library(hom.Hs.inp.db)
 library(org.Hs.eg.db)
 library(org.Bt.eg.db)
-getHomolog("ENSBTAP00000024572", revmap(hom.Hs.inpBOSTA), 'BOSTA') 
+getOrthologs("ENSBTAP00000024572", revmap(hom.Hs.inpBOSTA), 'BOSTA') 
 # And now, we will map from entrez genes 1, 2 and 3 to bovine Refseq
-bovine.ensembl <- getHomolog(c(1,2,3), hom.Hs.inpBOSTA, 'BOSTA', from=org.Hs.egENSEMBLPROT, to=org.Bt.egENSEMBLPROT2EG)
+bovine.ensembl <- getOrthologs(c(1,2,3), hom.Hs.inpBOSTA, 'BOSTA', pre.from=org.Hs.egENSEMBLPROT, pre.to=org.Bt.egENSEMBLPROT2EG)
 refseqs <- translate(unlist(bovine.ensembl, use.names=F), org.Bt.egREFSEQ)
 hs2bt.refseqs <- mapLists(bovine.ensembl, refseqs)
 # Another way of doing it:
