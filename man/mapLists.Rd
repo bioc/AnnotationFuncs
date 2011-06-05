@@ -1,7 +1,7 @@
 \name{mapLists}
 \alias{mapLists}
 \title{Replaces contents of list A with elements of list B...}
-\usage{mapLists(A, B, removeNAs=T)}
+\usage{mapLists(A, B, removeNAs=TRUE)}
 \description{Replaces contents of list A with elements of list B}
 \details{Combines two lists, \code{A} and \code{B}, such that \code{names(A)} are preserved, mapping to the
 values of \code{B}, using \code{names(B)} as look up.  Ie. replaces values in \code{A} with values

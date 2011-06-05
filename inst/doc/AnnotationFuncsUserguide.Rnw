@@ -105,7 +105,7 @@ genes <- c(280705, 280706, 100327208)
 translate(genes, org.Bt.egGENENAME)
 translate(genes, org.Bt.egCHR)
 translate(genes, org.Bt.egENSEMBL)
-translate(genes, org.Bt.egREFSEQ, remove.missing=F)
+translate(genes, org.Bt.egREFSEQ, remove.missing=FALSE)
 @
 This is however trivial, but not the last example how the non-mapped was included in the result.
 The first argument is coerced into a character vector of unique entries, so providing a list will do no good 
@@ -143,7 +143,7 @@ translate(symbols, org.Bt.egSYMBOL2EG, org.Bt.egREFSEQ, reduce='last')
 And finally, if you for some reason needed the result on matrix form, there is the argument
 \code{return.list}:
 <<>>=
-translate(symbols, org.Bt.egSYMBOL2EG, org.Bt.egREFSEQ, return.list=F)
+translate(symbols, org.Bt.egSYMBOL2EG, org.Bt.egREFSEQ, return.list=FALSE)
 @
 
 \subsubsection{Combining with other lists and using lapply and sapply}

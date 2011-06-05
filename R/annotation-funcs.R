@@ -63,8 +63,8 @@
 #' pickGO(GO, evidence=c('IMP','IGI','IPI','ISS','IDA','IEP','IEA'))
 translate <- function(values, from, to=NULL, 
                       reduce=c('all','first','last'), 
-                      return.list = T,
-                      remove.missing=T, 
+                      return.list = TRUE,
+                      remove.missing=TRUE, 
 					  ...) {
   # Roadmap:
   # Check validity of attributes. 
@@ -127,17 +127,17 @@ translate <- function(values, from, to=NULL,
 	# Check for special case where the from-package is into GO.
 	# If it is, then the primary must be reduced to only the GO identifiers and not the set of GO ID, evidence and category.
 	isGO <- FALSE
-	try(isGO <- from@objName == 'GO', silent=T)
+	try(isGO <- from@objName == 'GO', silent=TRUE)
 	if (isGO) {
 		primary <- pickGO(primary, ...)
 	}  
     # Remember to unlist, so we get every entry of primary, which is every 
     # possible translation of the starting values.
-    goal <- AnnotationDbi::mget(unlist(primary, use.names=F), to, ifnotfound=NA)
+    goal <- AnnotationDbi::mget(unlist(primary, use.names=FALSE), to, ifnotfound=NA)
     # Map all goal-annotations to the starting annotations:
     # lapply over primary, so we get primary's names.
     goal <- lapply(primary, function(x) {
-        x <- unlist(goal[x], use.names=F) # x is vector, so we get all entries in goal for all x.
+        x <- unlist(goal[x], use.names=FALSE) # x is vector, so we get all entries in goal for all x.
         if (length(x) == 0 || is.na(x[1])) 
           return(NA)
         x <- pickOne(x)
@@ -248,7 +248,7 @@ pickRefSeq <- function(l, priorities=c('NP','XP','NM','XM'),
   # Get prioritised element, by iterating over 'priorities' and grepping by it.
   ###
   for (p in priorities) {
-    res <- grep(p, l, ignore.case=T, value=T)
+    res <- grep(p, l, ignore.case=T, value=TRUE)
     if (length(res) > 0) break
   }
   if (length(res) == 0) return(NULL)
@@ -296,9 +296,9 @@ pickRefSeq.mRNA <- function(l) {
 #' B <- list('alpha'='b1', 'gamma'=c('b2', 'b3'), 'delta'='b4')
 #' mapLists(A, B) 
 #  # Returns: list('a1'='b1', 'a2'=NA, 'a3'=c('b2','b3','b4'))
-mapLists <- function(A, B, removeNAs=T) {
+mapLists <- function(A, B, removeNAs=TRUE) {
   res <- lapply(A, function(x) {
-    x <- unlist(B[as.character(x)], use.names=F)
+    x <- unlist(B[as.character(x)], use.names=FALSE)
     if (length(x) == 0 || is.na(x[1])) return(NA)
     return(x)
   })
@@ -348,7 +348,7 @@ pickGO <- function(l, evidence=NA, category=NA) {
 	
 	if (length(l) == 3) {
 		if (names(l) == c('GOID','Evidence','Ontology')) {
-			if (is.list(l)) l <- unlist(l, use.names=F)
+			if (is.list(l)) l <- unlist(l, use.names=FALSE)
 			if (is.na(evidence)) evidence = l[2]
 			if (is.na(category)) category = l[3]
 			if (l[2] %in% evidence & l[3] %in% category) return(l[1])
@@ -357,7 +357,7 @@ pickGO <- function(l, evidence=NA, category=NA) {
 	}
     if (all(substr(names(l), 1, 3) == 'GO:')) {
 		gos <- l[which(substr(names(l), 1, 3) == 'GO:')]
-		gos <- matrix(unlist(gos, use.names=F), ncol=3, byrow=T)
+		gos <- matrix(unlist(gos, use.names=FALSE), ncol=3, byrow=TRUE)
 		if (is.na(evidence)) {
 			from.evi <- rep(TRUE, nrow(gos))
 		} else {
@@ -394,5 +394,5 @@ getEvidenceCodes <- function() {
 				'NAS','non-traceable author statement',
 				'ND','no biological data available',
 				'IC','inferred by curator ')
-	return(matrix(codes, ncol=2, byrow=T, dimnames=list(c(), c('Code','Description'))))
+	return(matrix(codes, ncol=2, byrow=TRUE, dimnames=list(c(), c('Code','Description'))))
 }

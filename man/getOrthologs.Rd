@@ -21,12 +21,12 @@ Inparanoid: A Comprehensive Database of Eukaryotic Orthologs
 Remm, M., Storm, C.E.V, Sonnhammer, E.L.L (2001)
 Automatic clustering of orthologs and in-paralogs from pairwise species comparisons
 \emph{J. Mol. Biol.} \bold{314}:1041--1052}
-\seealso{\code{\link{translate}}, \code{\link{getTableName}}, \code{\link{mapLists}}}
+\seealso{\code{\link{translate}}, \code{\link{.getTableName}}, \code{\link{mapLists}}}
 \author{Stefan McKinnon Edwards \email{stefanm.edwards@agrsci.dk}}
 \arguments{\item{values}{Vector, coerced to character vector, of values needed mapping by homology.}
 \item{mapping}{Homology mapping object, such as \code{hom.Hs.inpBOSTA} or \code{revmap(hom.Hs.inpBOSTA)}.}
 \item{genus}{Character vector. 5 character INPARANOID style genus name of the mapping object, e.g. 'BOSTA' for both \code{hom.Hs.inpBOSTA} and \code{revmap(hom.Hs.inpBOSTA)}.}
-\item{thershold}{Numeric value between 0 and 1. Only clustered homologues with a parwise score above the threshold is included.
+\item{threshold}{Numeric value between 0 and 1. Only clustered homologues with a parwise score above the threshold is included.
 The native implementation has this set to 1.}
 \item{pre.from}{Mapping object if \code{values} needs translation before mapping. 
 E.g. \code{values} are entrez and \code{hom.Hs.inpBOSTA} requires ENSEMBLPROT, \code{hom.Hs.inpAPIME} requires Refseq (?).
@@ -41,7 +41,7 @@ library(org.Bt.eg.db)
 getOrthologs("ENSBTAP00000024572", revmap(hom.Hs.inpBOSTA), 'BOSTA') 
 # And now, we will map from entrez genes 1, 2 and 3 to bovine Refseq
 bovine.ensembl <- getOrthologs(c(1,2,3), hom.Hs.inpBOSTA, 'BOSTA', pre.from=org.Hs.egENSEMBLPROT, pre.to=org.Bt.egENSEMBLPROT2EG)
-refseqs <- translate(unlist(bovine.ensembl, use.names=F), org.Bt.egREFSEQ)
+refseqs <- translate(unlist(bovine.ensembl, use.names=FALSE), org.Bt.egREFSEQ)
 hs2bt.refseqs <- mapLists(bovine.ensembl, refseqs)
 # Another way of doing it:
 hs2bt.refseqs2 <- lapply(bovine.ensembl, translate, from=org.Bt.egREFSEQ, simplify=TRUE) # simplify=TRUE is very important here!}

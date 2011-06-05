@@ -1,11 +1,11 @@
 Package: AnnotationFuncs
-Version: 1.0.0
+Version: 1.0.1
 Date: 2011-05-04
 Title: Annotation translation functions
 Author: Stefan McKinnon Edwards <stefanm.edwards@agrsci.dk>
 Maintainer: Stefan McKinnon Edwards <stefanm.edwards@agrsci.dk>
 Depends: R (>= 2.7.0), AnnotationDbi
-Suggests: org.Bt.eg.db, GO.db, hom.Hs.inp.db
+Suggests: org.Bt.eg.db, org.Hs.eg.db, GO.db, hom.Hs.inp.db
 Description: Functions for handling translating between different
     identifieres using the Biocore Data Team data-packages (e.g.
     org.Bt.eg.db).

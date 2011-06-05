@@ -11,5 +11,5 @@ Quote INPARANOID (\code{?hom.Hs.inpBOSTA}):
 \references{\url{http://www.bioconductor.org/packages/release/bioc/html/AnnotationDbi.html}}
 \author{Stefan McKinnon Edwards \email{stefanm.edwards@agrsci.dk}}
 \arguments{\item{genus}{5 character INPARANOID genus name.}}
-\examples{getTableName('BOSTA')
-getTableName('mondo')}
+\examples{.getTableName('BOSTA')
+.getTableName('mondo')}

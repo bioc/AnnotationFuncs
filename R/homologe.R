@@ -7,7 +7,7 @@
 #' @param values Vector, coerced to character vector, of values needed mapping by homology.
 #' @param mapping Homology mapping object, such as \code{hom.Hs.inpBOSTA} or \code{revmap(hom.Hs.inpBOSTA)}.
 #' @param genus Character vector. 5 character INPARANOID style genus name of the mapping object, e.g. 'BOSTA' for both \code{hom.Hs.inpBOSTA} and \code{revmap(hom.Hs.inpBOSTA)}.
-#' @param thershold Numeric value between 0 and 1. Only clustered homologues with a parwise score above the threshold is included.
+#' @param threshold Numeric value between 0 and 1. Only clustered homologues with a parwise score above the threshold is included.
 #'                  The native implementation has this set to 1.
 #' @param pre.from Mapping object if \code{values} needs translation before mapping. 
 #'             E.g. \code{values} are entrez and \code{hom.Hs.inpBOSTA} requires ENSEMBLPROT, \code{hom.Hs.inpAPIME} requires Refseq (?).
@@ -32,7 +32,7 @@
 #'  Automatic clustering of orthologs and in-paralogs from pairwise species comparisons
 #'  \emph{J. Mol. Biol.} \bold{314}:1041--1052
 #'  
-#' @seealso \code{\link{translate}}, \code{\link{getTableName}}, \code{\link{mapLists}}
+#' @seealso \code{\link{translate}}, \code{\link{.getTableName}}, \code{\link{mapLists}}
 #' @export
 #' @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
 #' @examples
@@ -42,7 +42,7 @@
 #' getOrthologs("ENSBTAP00000024572", revmap(hom.Hs.inpBOSTA), 'BOSTA') 
 #' # And now, we will map from entrez genes 1, 2 and 3 to bovine Refseq
 #' bovine.ensembl <- getOrthologs(c(1,2,3), hom.Hs.inpBOSTA, 'BOSTA', from=org.Hs.egENSEMBLPROT, to=org.Bt.egENSEMBLPROT2EG)
-#' refseqs <- translate(unlist(bovine.ensembl, use.names=F), org.Bt.egREFSEQ)
+#' refseqs <- translate(unlist(bovine.ensembl, use.names=FALSE), org.Bt.egREFSEQ)
 #' hs2bt.refseqs <- mapLists(bovine.ensembl, refseqs)
 #' # Another way of doing it:
 #' hs2bt.refseqs2 <- lapply(bovine.ensembl, translate, from=org.Bt.egREFSEQ, simplify=TRUE) # simplify=TRUE is very important here!
@@ -53,7 +53,7 @@
 #setwd('C:/TXT/Joanna')
 #load('genelist.Rdata')
 #ens <- translate(genes, org.Bt.egENSEMBLPROT)
-#values <- unlist(ens, use.names=F)
+#values <- unlist(ens, use.names=FALSE)
 #mapping <- hom.Hs.inpBOSTA
 #genus <- 'BOSTA'
 #threshold <- 1
@@ -72,7 +72,7 @@ getOrthologs <- function(values, mapping, genus, threshold=1,
     # Check if we do some translating first:
     if (!is.null(pre.from)) {
         trans1 <- translate(values, pre.from, pre.to, ...)
-        values <- unlist(trans1, use.names=F)
+        values <- unlist(trans1, use.names=FALSE)
     }
     
     # Check validity of `mapping` and genus.
@@ -135,8 +135,8 @@ getOrthologs <- function(values, mapping, genus, threshold=1,
 #'  @references \url{http://www.bioconductor.org/packages/release/bioc/html/AnnotationDbi.html}
 #'  @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
 #'  @examples
-#'  getTableName('BOSTA')
-#'  getTableName('mondo')
+#'  .getTableName('BOSTA')
+#'  .getTableName('mondo')
 .getTableName <- function(genus) {
     # Find the AnnotationDbi source
     # Open createAnnObjs.INPARANOID_DB.R
