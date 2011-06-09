@@ -4,7 +4,7 @@
 % \VignetteDepends{AnnotationDbi}
 
 \title{Annotation mapping functions}
-\author{Stefan McKinnon Edwards \\ Faculty of Agricultural Sciences, Aarhus University}
+\author{Stefan McKinnon Edwards \\ \email{stefan.hoj-edwards@@agrsci.dk} \\ Faculty of Agricultural Sciences, Aarhus University}
 \date{\today}
 \begin{document}
 \maketitle
@@ -146,34 +146,6 @@ And finally, if you for some reason needed the result on matrix form, there is t
 translate(symbols, org.Bt.egSYMBOL2EG, org.Bt.egREFSEQ, return.list=FALSE)
 @
 
-\subsubsection{Combining with other lists and using lapply and sapply}
-Sometimes your input might not be a vector of values, but a list object, 
-mapping a grouping of genes:
-<<>>=
-groups <- list('a'=c('ACR','ASM','S','KERA'), 'IL'=c('IL1','IL2','IL3','IL10'), 'bwahh'=c('ACR','SERPINA1','IL1','IL10','CD5'))
-@
-For these three groups, you want the entrez gene id for each gene. For this we have two options: \code{lapply/sapply} and \code{mapLists}.
-When using \code{lapply} or \code{sapply}, we have added an argument, \code{simplify} which reduces the result from translate to a simple character vector:
-<<>>=
-lapply(groups, translate, from=org.Bt.egSYMBOL2EG, simplify=TRUE)
-@
-
-Of cause, if there are many recurring IDs, we do not want redundant look ups for the genes, so we do it a bit smarter and just start by
-asking for a translation of all the genes. This just leaves us with the task of mapping the groups to the result.
-<<>>=
-symbols <- unlist(groups, use.names=FALSE)
-ent <- translate(symbols, org.Bt.egSYMBOL2EG)
-ent
-mapLists(groups, ent)
-@
-
-Tip: When unlisting a list (\code{unlist}), set the argument \code{use.names} to \code{FALSE}, as this will
-greatly speed up the process. But, naturally, only if you do not need the names.
-
-Tip 2: \code{unlist} concatenate the names with a number for each entry, with might make a mess, if the names
-already end with a number. There is an alternative, \code{unlist\textbf{2}} in the package \code{AnnotationDbi}
-which preserves the names.
-
 \subsection{RefSeq}
 As noted in the previous section, a single gene can map to several RefSeq identifiers. The format of 
 the RefSeq identifier differs depending on the type, but they can be recognized on their prefix.
@@ -219,73 +191,11 @@ filter the intermediate product before mapping to the end product.
 The evidence codes can be found by executing \code{?org.Bt.egGO} or \code{getEvidenceCodes()}.
 
 
-\subsection{Finding orthologs / using the INPARANOID data packages}
-The Stockholm Bioinformatics Centre has compiled some data packages containing orthologs and paralogs (collectively called homologs) \cite{inparanoid6,inparanoid,Reem2001}.
-These are very useful if you need to map ids from one species to another. At the current time, there are about 38 species in 
-the data packages.
-These data packages can be downloaded from BioConductor and are named \code{hom.Xx.inp.db}, where Xx is the central species, such as
-At, Ce, Dm, Dr, Hs, Mm, Rn and Sc (guess what the abbreviation stands for). The central species are of the same concept as for the 
-organism annotation packages mentioned earlier. For the human package, \code{hom.Hs.inp.db}, this means that the ortholog mappings 
-are between Humans and cattle, humans and mice and so on.
-
-The builtin method of performing a ortholog mapping is as such:
-<<>>=@
-library(hom.Hs.inp.db)
-submap <- hom.Hs.inpBOSTA[c('ENSP00000356224','ENSP00000384582','ENSP00000364403')]
-toTable(submap)
-@
-
-This one was quick. But if you query for lots of ids (e.g. the entire set), it takes a long time, 
-and even longer if you are querying on the reversed map.
-Furthermore, if you included values that could not be mapped, an error is returned:
-\begin{Schunk}
-\begin{Sinput}
->  hom.Hs.inpBOSTA['bwahh']
-\end{Sinput}
-\begin{Soutput}
-Error  in  .checkKeys(value,  Lkeys(x),  x@ifnotfound)  :
-  value  for  "bwahh"  not  found
-\end{Soutput}
-\end{Schunk}
-Note: This can be resolved by using \code{AnnotationDbi::mget(values, hom.Hs.inpBOSTA, \textbf{ifnotfound=NA})}
-which also returns a list object.
-
-We therefore present the function \code{getOrthologs}. It is faster and more powerful. 
-Faster, as retrieving all mapped ids from bovine to human took approx. 11 minutes with the method shown above,
-while \code{getOrthologs} did it in just 1.17 seconds.
-More powerful, as it can translate the input values \textit{before} mapping \textit{and} the mapped ids \textit{after} mapping
-(but not automatically - you have to tell it which translations to use).
-To reproduce the above (in list form):
-<<>>=@
-getOrthologs(c('ENSP00000356224','ENSP00000384582','ENSP00000364403'), hom.Hs.inpBOSTA, 'BOSTA')
-@
-
-Unfortunately we require the INPARANOID style genus names ('BOSTA') to be provided as a character string. 
-These are the same as the five last characters in the mapping object, if you use the original names from the package.
-
-However, the INPARANOID data packages works primarily with Ensembl protein ids. If for instance your ids are entrez, refseq, etc.
-you are required to translate them into Ensembl before the mapping. This can be done in the same call to the function:
-<<>>=@
-symbols <- c("SERPINA1","KERA","CD5")
-getOrthologs(symbols, hom.Hs.inpBOSTA, 'BOSTA', pre.from=org.Hs.egSYMBOL2EG, pre.to=org.Hs.egENSEMBLPROT, post.from=org.Bt.egENSEMBLPROT2EG, post.to=org.Bt.egSYMBOL)
-@
-
-Are you surprised about the result?
-The four arguments \code{pre.from}, \code{pre.to}, \code{post.from} and \code{post.to} corresponds directly to the \code{from} and \code{to} arguments in 
-\code{translate}, with "pre" for the translation \textit{before} mapping and "post" for the translation \textit{after} mapping.
-In this example we used the \code{org.Hs.eg.db} to map the input from the symbol to Ensembl. As \code{org.Hs.eg.db} is centred around
-Entrez gene ids, it requires the two-step translation from symbol to Entrez to Ensembl, and likewise for the post mapping translation.
-If your input was Entrez gene ids, you would only require the \code{pre.from} argument.
-
-\textbf{Note!} Some of the species in the INPARANOID homology data packages are represented with other ids than Ensembl. For instance,
-\textit{Arabidopsis thaliana} (\code{ARATH}) has ids such as \code{At1g80070.1}, 
-while \textit{Trichoplax adhaerens} (\code{TRIAD}) as ids such as \code{24890} which should not be confused with Entrez gene IDs.
-
 \section{What was used to create this document}
 The version number of R and the packages and their versions that were used to generate this
 document are listed below.
 <<>>=
-sessionInfo()
+toLatex(sessionInfo())
 @
 
 \section{References}
@@ -358,6 +268,5 @@ Maido Remm, Christian E.~V. Storm, and Erik L.~L. Sonnhammer.
 \newblock {\em J. Mol. Biol.}, 314:1041--1052, 2001.
 
 \end{thebibliography}
-
 
 \end{document}

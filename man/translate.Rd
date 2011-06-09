@@ -1,7 +1,7 @@
 \name{translate}
 \alias{translate}
 \title{Translate between different identifiers...}
-\usage{translate(values, from, to = NULL, reduce=c("all", "first", "last"),
+\usage{translate(values, from, to, reduce=c("all", "first", "last"),
     return.list=TRUE, remove.missing=TRUE, ...)}
 \description{Translate between different identifiers}
 \details{Function for translating from one annotation to another, eg. from RefSeq to  
@@ -22,7 +22,7 @@ See \code{\link{pickGO}}.}
 \note{Requires user to deliver the annotation packages such as org.Bt.egREFSEQ.}
 \value{List; names of elements are \code{values} and the elements are the translated elements,
 or \code{NULL} if not translatable with \code{remove.missing = TRUE}.}
-\author{Stefan McKinnon Edwards \email{stefanm.edwards@agrsci.dk}}
+\author{Stefan McKinnon Edwards \email{stefan.hoj-edwards@agrsci.dk}}
 \seealso{\code{\link{pickRefSeq}}, \code{\link{pickGO}}}
 \arguments{\item{values}{Vector of annotations that needs translation. Coerced to character vector.}
 \item{from}{Type of annotation \code{values} are given in. NB! take care in the       
@@ -37,7 +37,7 @@ after translating to the goal:
 \code{all}: returns all annotations                                       
 \code{first} or \code{last}: choose first or last of arbitrarily ordered list.}
 \item{return.list}{Logical, when \code{TRUE}, returns the translation as a list where names}
-\item{remove.missing}{Logical, whether to remove non-translated values, defaults \code{TRUE}.}
+\item{remove.missing}{Boolean, whether to remove non-translated values, defaults \code{TRUE}.}
 \item{...}{Additional arguments sent to \code{\link{pickGO}} if \code{from} returns GO set.}}
 \examples{library(org.Bt.eg.db)
 genes <- c(280705, 280706, 100327208)

@@ -4,9 +4,9 @@
 \details{\tabular{ll}{
 Package:  \tab  AnnotationFuncs\cr
 Type:  \tab  Package\cr
-Version:  \tab  1.1.2 \cr
+Version:  \tab  1.0.1\cr
 Date:  \tab  2011-05-04\cr
-License:  \tab  Artistic (>=  2)\cr
+License:  \tab  GPL-2\cr
 LazyLoad:  \tab  yes\cr
 }
 
@@ -16,11 +16,10 @@ Primary function is \code{\link{translate}} for translating.
 Other functions include functions for selecting Refseqs or Gene Ontologies (GO).}
 \alias{AnnotationFuncs}
 \docType{package}
-\author{Stefan McKinnon Edwards  \email{stefanm.edwards@agrsci.dk}}
-\references{\url{http://www.iysik.com/}}
+\author{Stefan McKinnon Edwards  \email{stefan.hoj-edwards@agrsci.dk}}
+\references{\url{http://www.iysik.com/index.php?page=annotation-functions}}
 \keyword{package}
-\seealso{\code{\link{translate}}, \code{\link{getOrthologs}}}
-\note{Requires user to deliver the annotation packages such as \code{org.Bt.egREFSEQ}.}
+\seealso{\code{\link{translate}}}
 \examples{library(org.Bt.eg.db)
 gene.symbols <- c('DRBP1','SERPINA1','FAKE','BLABLA')
 # Find entrez identifiers of these genes.

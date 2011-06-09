@@ -1,4 +1,40 @@
-# Annotation translation functions
+#' Annotation translation functions
+#'
+#' \tabular{ll}{
+#' Package:  \tab  AnnotationFuncs\cr
+#' Type:  \tab  Package\cr
+#' Version:  \tab  1.0.1\cr
+#' Date:  \tab  2011-05-04\cr
+#' License:  \tab  GPL-2\cr
+#' LazyLoad:  \tab  yes\cr
+#' }
+#'
+#' Functions for handling translations between different identifieres using
+#' the Biocore Data Team data-packages (e.g. \code{org.Bt.eg.db}).  
+#' Primary function is \code{\link{translate}} for translating.  
+#' Other functions include functions for selecting Refseqs or Gene Ontologies (GO).  
+#'
+#' @name  AnnotationFuncs-package
+#' @aliases  AnnotationFuncs
+#' @docType  package
+#' @title Annotation translation functions
+#' @author  Stefan McKinnon Edwards  \email{stefan.hoj-edwards@@agrsci.dk}
+#' @references
+#' \url{http://www.iysik.com/index.php?page=annotation-functions}
+#' @keywords  package
+#' @seealso  \code{\link{translate}}
+#' @examples
+#' library(org.Bt.eg.db)
+#' gene.symbols <- c('DRBP1','SERPINA1','FAKE','BLABLA')
+#' # Find entrez identifiers of these genes.
+#' eg <- translate(gene.symbols, org.Bt.egSYMBOL2EG)
+#' # Note that not all symbols were translated.
+#'
+#' # Go directly to Refseq identifiers.
+#' refseq <- translate(gene.symbols, from=org.Bt.egSYMBOL2EG, to=org.Bt.egREFSEQ)
+#' # Pick the proteins:
+#'  pickRefSeq(refseq, priorities=c('NP','XP'), reduce='all')
+NULL
 
 #' Translate between different identifiers
 #'
@@ -39,7 +75,7 @@
 #' @param ... Additional arguments sent to \code{\link{pickGO}} if \code{from} returns GO set.
 #' @return List; names of elements are \code{values} and the elements are the translated elements,
 #'        or \code{NULL} if not translatable with \code{remove.missing = TRUE}.
-#' @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
+#' @author Stefan McKinnon Edwards \email{stefan.hoj-edwards@@agrsci.dk}
 #' @seealso \code{\link{pickRefSeq}}, \code{\link{pickGO}}
 #' @export
 #' @examples
@@ -123,7 +159,7 @@ translate <- function(values, from, to=NULL,
   ###
   # Translate all primary ids to goal annotation 
   ###
-  if (is.null(to) == F) {
+  if (is.null(to) == FALSE) {
 	# Check for special case where the from-package is into GO.
 	# If it is, then the primary must be reduced to only the GO identifiers and not the set of GO ID, evidence and category.
 	isGO <- FALSE
@@ -133,7 +169,7 @@ translate <- function(values, from, to=NULL,
 	}  
     # Remember to unlist, so we get every entry of primary, which is every 
     # possible translation of the starting values.
-    goal <- AnnotationDbi::mget(unlist(primary, use.names=FALSE), to, ifnotfound=NA)
+    goal <- AnnotationDbi::mget(unlist(primary, use.names=F), to, ifnotfound=NA)
     # Map all goal-annotations to the starting annotations:
     # lapply over primary, so we get primary's names.
     goal <- lapply(primary, function(x) {
@@ -199,7 +235,7 @@ translate <- function(values, from, to=NULL,
 #'         \code{all}: returns all annotations                                       
 #'         \code{first} or \code{last}: choose first or last of arbitrarily ordered list.
 #' @return If vector given, returns vector.  If list given, returns list without element where nothing could be picked.
-#' @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
+#' @author Stefan McKinnon Edwards \email{stefan.hoj-edwards@@agrsci.dk}
 #' @export
 #' @examples
 #' library(org.Bt.eg.db)
@@ -230,7 +266,7 @@ pickRefSeq <- function(l, priorities=c('NP','XP','NM','XM'),
 #' @param reduce How to reduce.
 #' @return List.
 #' @note Hey, you found a secret function! Keep it that way!
-#' @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
+#' @author Stefan McKinnon Edwards \email{stefan.hoj-edwards@@agrsci.dk}
 #' @seealso \code{\link{pickRefSeq}}
 .pickRef <- function(l, priorities, reduce=c('all','first','last')){
   # Roadmap:
@@ -248,7 +284,7 @@ pickRefSeq <- function(l, priorities=c('NP','XP','NM','XM'),
   # Get prioritised element, by iterating over 'priorities' and grepping by it.
   ###
   for (p in priorities) {
-    res <- grep(p, l, ignore.case=T, value=TRUE)
+    res <- grep(p, l, ignore.case=TRUE, value=TRUE)
     if (length(res) > 0) break
   }
   if (length(res) == 0) return(NULL)
@@ -289,7 +325,7 @@ pickRefSeq.mRNA <- function(l) {
 #' @param removeNAs Boolean, whether to remove the \code{NA}s that occur because an element was not found in \code{B}.
 #' @return List.
 #' @seealso \code{\link{removeNAs}}
-#' @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
+#' @author Stefan McKinnon Edwards \email{stefan.hoj-edwards@@agrsci.dk}
 #' @export
 #' @examples
 #' A <- list('a1'='alpha','a2'='beta','a3'=c('gamma','delta'))
@@ -311,9 +347,9 @@ mapLists <- function(A, B, removeNAs=TRUE) {
 #' Removes entries equal \code{NA}, but not mixed entries containing, amongst others, \code{NA}.  
 #' Good for use after \code{\link{mapLists}} that might return entries equal \code{NA}.  
 #' @param l Vector or list.
-#' @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
+#' @author Stefan McKinnon Edwards \email{stefan.hoj-edwards@@agrsci.dk}
 #' @export
-#' @exampels
+#' @examples
 #' removeNAs(list('a'=NA, 'b'=c(NA, 'B'), 'c'='C'))
 removeNAs <- function(l) { return(l[!is.na(l)]) }
 
@@ -330,7 +366,7 @@ removeNAs <- function(l) { return(l[!is.na(l)]) }
 #' @param category Character vector, filters on which ontology to return: biological process (BP), cellular component (CC), or molecular function (MF). \\*
 #'				   Leave as \code{NA} to ignore filtering on this part.
 #' @return List with only the picked elements.
-#' @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
+#' @author Stefan McKinnon Edwards \email{stefan.hoj-edwards@@agrsci.dk}
 #' @seealso \code{\link{pickRefSeq}}, \code{\link{getEvidenceCodes}}, \code{\link{translate}}
 #' @export
 #' @examples 
@@ -357,7 +393,7 @@ pickGO <- function(l, evidence=NA, category=NA) {
 	}
     if (all(substr(names(l), 1, 3) == 'GO:')) {
 		gos <- l[which(substr(names(l), 1, 3) == 'GO:')]
-		gos <- matrix(unlist(gos, use.names=FALSE), ncol=3, byrow=TRUE)
+		gos <- matrix(unlist(gos, use.names=F), ncol=3, byrow=TRUE)
 		if (is.na(evidence)) {
 			from.evi <- rep(TRUE, nrow(gos))
 		} else {
@@ -379,7 +415,7 @@ pickGO <- function(l, evidence=NA, category=NA) {
 #' @return Matrix of two columns, first column with codes, second column with description of codes.
 #' @seealso \code{\link{pickGO}}
 #' @export
-#' @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
+#' @author Stefan McKinnon Edwards \email{stefan.hoj-edwards@@agrsci.dk}
 #' @examples
 #' getEvidenceCodes()
 getEvidenceCodes <- function() {
@@ -394,5 +430,5 @@ getEvidenceCodes <- function() {
 				'NAS','non-traceable author statement',
 				'ND','no biological data available',
 				'IC','inferred by curator ')
-	return(matrix(codes, ncol=2, byrow=TRUE, dimnames=list(c(), c('Code','Description'))))
+	return(matrix(codes, ncol=2, byrow=T, dimnames=list(c(), c('Code','Description'))))
 }

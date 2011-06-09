@@ -5,5 +5,6 @@
 \description{Removes entries equal \code{NA} from list or vector}
 \details{Removes entries equal \code{NA}, but not mixed entries containing, amongst others, \code{NA}.  
 Good for use after \code{\link{mapLists}} that might return entries equal \code{NA}.}
-\author{Stefan McKinnon Edwards \email{stefanm.edwards@agrsci.dk}}
+\author{Stefan McKinnon Edwards \email{stefan.hoj-edwards@agrsci.dk}}
 \arguments{\item{l}{Vector or list.}}
+\examples{removeNAs(list('a'=NA, 'b'=c(NA, 'B'), 'c'='C'))}
