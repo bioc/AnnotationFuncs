@@ -6,7 +6,7 @@
 \details{Do not use it, use \code{\link{pickRefSeq}}!}
 \value{List.}
 \note{Hey, you found a secret function! Keep it that way!}
-\author{Stefan McKinnon Edwards \email{stefanm.edwards@agrsci.dk}}
+\author{Stefan McKinnon Edwards \email{stefan.hoj-edwards@agrsci.dk}}
 \seealso{\code{\link{pickRefSeq}}}
 \arguments{\item{l}{List.}
 \item{priorities}{How to prioritize.}

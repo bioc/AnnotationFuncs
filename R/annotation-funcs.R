@@ -1,4 +1,42 @@
 # Annotation translation functions
+#'
+#' \tabular{ll}{
+#' Package:  \tab  AnnotationFuncs\cr
+#' Type:  \tab  Package\cr
+#' Version:  \tab  1.3.0\cr
+#' Date:  \tab  2011-06-10\cr
+#' License:  \tab  GPL-2\cr
+#' LazyLoad:  \tab  yes\cr
+#' }
+#'
+#' Functions for handling translations between different identifieres using
+#' the Biocore Data Team data-packages (e.g. \code{org.Bt.eg.db}).  
+#' Primary functions are \code{\link{translate}} for translating
+#' and \code{\link{getOrthologs}} for efficient lookup of homologes 
+#' using the Inparanoid databases.
+#' Other functions include functions for selecting Refseqs or Gene Ontologies (GO).  
+#'
+#' @name  AnnotationFuncs-package
+#' @aliases  AnnotationFuncs
+#' @docType  package
+#' @title Annotation translation functions
+#' @author  Stefan McKinnon Edwards  \email{stefan.hoj-edwards@@agrsci.dk}
+#' @references
+#' \url{http://www.iysik.com/index.php?page=annotation-functions}
+#' @keywords  package
+#' @seealso  \code{\link{translate}}, \code{\link{getOrthologs}}
+#' @examples
+#' library(org.Bt.eg.db)
+#' gene.symbols <- c('DRBP1','SERPINA1','FAKE','BLABLA')
+#' # Find entrez identifiers of these genes.
+#' eg <- translate(gene.symbols, org.Bt.egSYMBOL2EG)
+#' # Note that not all symbols were translated.
+#'
+#' # Go directly to Refseq identifiers.
+#' refseq <- translate(gene.symbols, from=org.Bt.egSYMBOL2EG, to=org.Bt.egREFSEQ)
+#' # Pick the proteins:
+#'  pickRefSeq(refseq, priorities=c('NP','XP'), reduce='all')
+NULL
 
 #' Translate between different identifiers
 #'
@@ -41,7 +79,7 @@
 #' @param ... Additional arguments sent to \code{\link{pickGO}} if \code{from} returns GO set.
 #' @return List; names of elements are \code{values} and the elements are the translated elements,
 #'        or \code{NULL} if not translatable with \code{remove.missing = TRUE}.
-#' @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
+#' @author Stefan McKinnon Edwards \email{stefan.hoj-edwards@@agrsci.dk}
 #' @seealso \code{\link{pickRefSeq}}, \code{\link{pickGO}}
 #' @export
 #' @examples
@@ -130,7 +168,7 @@ translate <- function(values, from, to=NULL,
 	# Check for special case where the from-package is into GO.
 	# If it is, then the primary must be reduced to only the GO identifiers and not the set of GO ID, evidence and category.
 	isGO <- FALSE
-	try(isGO <- from@objName == 'GO', silent=T)
+	try(isGO <- from@objName == 'GO', silent=TRUE)
 	if (isGO) {
 		primary <- pickGO(primary, ...)
 	}  
@@ -203,7 +241,7 @@ translate <- function(values, from, to=NULL,
 #'         \code{all}: returns all annotations                                       
 #'         \code{first} or \code{last}: choose first or last of arbitrarily ordered list.
 #' @return If vector given, returns vector.  If list given, returns list without element where nothing could be picked.
-#' @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
+#' @author Stefan McKinnon Edwards \email{stefan.hoj-edwards@@agrsci.dk}
 #' @export
 #' @examples
 #' library(org.Bt.eg.db)
@@ -234,7 +272,7 @@ pickRefSeq <- function(l, priorities=c('NP','XP','NM','XM'),
 #' @param reduce How to reduce.
 #' @return List.
 #' @note Hey, you found a secret function! Keep it that way!
-#' @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
+#' @author Stefan McKinnon Edwards \email{stefan.hoj-edwards@@agrsci.dk}
 #' @seealso \code{\link{pickRefSeq}}
 .pickRef <- function(l, priorities, reduce=c('all','first','last')){
   # Roadmap:
@@ -293,7 +331,7 @@ pickRefSeq.mRNA <- function(l) {
 #' @param removeNAs Boolean, whether to remove the \code{NA}s that occur because an element was not found in \code{B}.
 #' @return List.
 #' @seealso \code{\link{removeNAs}}
-#' @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
+#' @author Stefan McKinnon Edwards \email{stefan.hoj-edwards@@agrsci.dk}
 #' @export
 #' @examples
 #' A <- list('a1'='alpha','a2'='beta','a3'=c('gamma','delta'))
@@ -302,7 +340,7 @@ pickRefSeq.mRNA <- function(l) {
 #  # Returns: list('a1'='b1', 'a2'=NA, 'a3'=c('b2','b3','b4'))
 mapLists <- function(A, B, removeNAs=TRUE) {
   res <- lapply(A, function(x) {
-    x <- unlist(B[as.character(x)], use.names=F)
+    x <- unlist(B[as.character(x)], use.names=FALSE)
     if (length(x) == 0 || is.na(x[1])) return(NA)
     return(x)
   })
@@ -315,7 +353,7 @@ mapLists <- function(A, B, removeNAs=TRUE) {
 #' Removes entries equal \code{NA}, but not mixed entries containing, amongst others, \code{NA}.  
 #' Good for use after \code{\link{mapLists}} that might return entries equal \code{NA}.  
 #' @param l Vector or list.
-#' @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
+#' @author Stefan McKinnon Edwards \email{stefan.hoj-edwards@@agrsci.dk}
 #' @export
 #' @examples
 #' removeNAs(list('a'=NA, 'b'=c(NA, 'B'), 'c'='C'))
@@ -334,7 +372,7 @@ removeNAs <- function(l) { return(l[!is.na(l)]) }
 #' @param category Character vector, filters on which ontology to return: biological process (BP), cellular component (CC), or molecular function (MF). \\*
 #'				   Leave as \code{NA} to ignore filtering on this part.
 #' @return List with only the picked elements.
-#' @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
+#' @author Stefan McKinnon Edwards \email{stefan.hoj-edwards@@agrsci.dk}
 #' @seealso \code{\link{pickRefSeq}}, \code{\link{getEvidenceCodes}}, \code{\link{translate}}
 #' @export
 #' @examples 
@@ -383,7 +421,7 @@ pickGO <- function(l, evidence=NA, category=NA) {
 #' @return Matrix of two columns, first column with codes, second column with description of codes.
 #' @seealso \code{\link{pickGO}}
 #' @export
-#' @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
+#' @author Stefan McKinnon Edwards \email{stefan.hoj-edwards@@agrsci.dk}
 #' @examples
 #' getEvidenceCodes()
 getEvidenceCodes <- function() {

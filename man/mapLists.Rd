@@ -10,7 +10,7 @@ Once more?  See examples.
 \emph{NB!} None-mapped entries are returned as NA, but can be removed using \code{\link{removeNAs}}.}
 \value{List.}
 \seealso{\code{\link{removeNAs}}}
-\author{Stefan McKinnon Edwards \email{stefanm.edwards@agrsci.dk}}
+\author{Stefan McKinnon Edwards \email{stefan.hoj-edwards@agrsci.dk}}
 \arguments{\item{A}{List, elements are coerced to character for mapping to B.}
 \item{B}{List.}
 \item{removeNAs}{Boolean, whether to remove the \code{NA}s that occur because an element was not found in \code{B}.}}

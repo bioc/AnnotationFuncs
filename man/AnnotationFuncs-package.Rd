@@ -1,26 +1,25 @@
 \name{AnnotationFuncs-package}
 \title{Annotation translation functions}
-\description{Annotation translation functions}
-\details{\tabular{ll}{
+\description{\tabular{ll}{
 Package:  \tab  AnnotationFuncs\cr
 Type:  \tab  Package\cr
-Version:  \tab  0.1.3 \cr
-Date:  \tab  2011-01-12\cr
-License:  \tab  Artistic (>=  2)\cr
+Version:  \tab  1.3.0\cr
+Date:  \tab  2011-06-10\cr
+License:  \tab  GPL-2\cr
 LazyLoad:  \tab  yes\cr
-}
-
-Functions for handling translations between different identifieres using
+}}
+\details{Functions for handling translations between different identifieres using
 the Biocore Data Team data-packages (e.g. \code{org.Bt.eg.db}).  
-Primary function is \code{\link{translate}} for translating.  
+Primary functions are \code{\link{translate}} for translating
+and \code{\link{getOrthologs}} for efficient lookup of homologes 
+using the Inparanoid databases.
 Other functions include functions for selecting Refseqs or Gene Ontologies (GO).}
 \alias{AnnotationFuncs}
 \docType{package}
-\author{Stefan McKinnon Edwards  \email{stefanm.edwards@agrsci.dk}}
-\references{\url{http://www.iysik.com/}}
+\author{Stefan McKinnon Edwards  \email{stefan.hoj-edwards@agrsci.dk}}
+\references{\url{http://www.iysik.com/index.php?page=annotation-functions}}
 \keyword{package}
-\seealso{\code{\link{translate}}}
-\note{Requires user to deliver the annotation packages such as \code{org.Bt.egREFSEQ}.}
+\seealso{\code{\link{translate}}, \code{\link{getOrthologs}}}
 \examples{library(org.Bt.eg.db)
 gene.symbols <- c('DRBP1','SERPINA1','FAKE','BLABLA')
 # Find entrez identifiers of these genes.

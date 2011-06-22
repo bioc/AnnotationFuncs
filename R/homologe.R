@@ -7,7 +7,7 @@
 #' @param values Vector, coerced to character vector, of values needed mapping by homology.
 #' @param mapping Homology mapping object, such as \code{hom.Hs.inpBOSTA} or \code{revmap(hom.Hs.inpBOSTA)}.
 #' @param genus Character vector. 5 character INPARANOID style genus name of the mapping object, e.g. 'BOSTA' for both \code{hom.Hs.inpBOSTA} and \code{revmap(hom.Hs.inpBOSTA)}.
-#' @param thershold Numeric value between 0 and 1. Only clustered homologues with a parwise score above the threshold is included.
+#' @param threshold Numeric value between 0 and 1. Only clustered homologues with a parwise score above the threshold is included.
 #'                  The native implementation has this set to 1.
 #' @param pre.from Mapping object if \code{values} needs translation before mapping. 
 #'             E.g. \code{values} are entrez and \code{hom.Hs.inpBOSTA} requires ENSEMBLPROT, \code{hom.Hs.inpAPIME} requires Refseq (?).
@@ -32,17 +32,17 @@
 #'  Automatic clustering of orthologs and in-paralogs from pairwise species comparisons
 #'  \emph{J. Mol. Biol.} \bold{314}:1041--1052
 #'  
-#' @seealso \code{\link{translate}}, \code{\link{getTableName}}, \code{\link{mapLists}}
+#' @seealso \code{\link{translate}}, \code{\link{.getTableName}}, \code{\link{mapLists}}
 #' @export
-#' @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
+#' @author Stefan McKinnon Edwards \email{stefan.hoj-edwards@@agrsci.dk}
 #' @examples
 #' library(hom.Hs.inp.db)
 #' library(org.Hs.eg.db)
 #' library(org.Bt.eg.db)
 #' getOrthologs("ENSBTAP00000024572", revmap(hom.Hs.inpBOSTA), 'BOSTA') 
 #' # And now, we will map from entrez genes 1, 2 and 3 to bovine Refseq
-#' bovine.ensembl <- getOrthologs(c(1,2,3), hom.Hs.inpBOSTA, 'BOSTA', from=org.Hs.egENSEMBLPROT, to=org.Bt.egENSEMBLPROT2EG)
-#' refseqs <- translate(unlist(bovine.ensembl, use.names=F), org.Bt.egREFSEQ)
+#' bovine.ensembl <- getOrthologs(c(1,2,3), hom.Hs.inpBOSTA, 'BOSTA', pre.from=org.Hs.egENSEMBLPROT, post.from=org.Bt.egENSEMBLPROT2EG)
+#' refseqs <- translate(unlist(bovine.ensembl, use.names=FALSE), org.Bt.egREFSEQ)
 #' hs2bt.refseqs <- mapLists(bovine.ensembl, refseqs)
 #' # Another way of doing it:
 #' hs2bt.refseqs2 <- lapply(bovine.ensembl, translate, from=org.Bt.egREFSEQ, simplify=TRUE) # simplify=TRUE is very important here!
@@ -130,13 +130,10 @@ getOrthologs <- function(values, mapping, genus, threshold=1,
 #'  \emph{Names for these maps are done in the "INPARANOID style" which means that they are normally the 1st three letters of the genus followed by the 1st two letters of the species. For example: "Mus musculus" becomes "MUSMU", "Homo sapiens" becomes "HOMSA", "Monodelphis domestica" becomes "MONDO" etc. This means that for most of these organisms it will be possible to easily guess the abbreviations used. An exception may occur in the future if a new model organism has a very similar genus and species name to an existing one. }
 #'
 #' 
-#'  @param genus 5 character INPARANOID genus name.
+#'  @param genus 5 character INPARANOID genus name, such as "BOSTA", "HOMSA" or "MUSMU".
 #'  @return Table name for genus.
 #'  @references \url{http://www.bioconductor.org/packages/release/bioc/html/AnnotationDbi.html}
 #'  @author Stefan McKinnon Edwards \email{stefanm.edwards@@agrsci.dk}
-#'  @examples
-#'  getTableName('BOSTA')
-#'  getTableName('mondo')
 .getTableName <- function(genus) {
     # Find the AnnotationDbi source
     # Open createAnnObjs.INPARANOID_DB.R

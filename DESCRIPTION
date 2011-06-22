@@ -1,16 +1,16 @@
 Package: AnnotationFuncs
-Version: 1.1.2
-Date: 2011-05-04
+Maintainer: Stefan McKinnon Edwards <stefan.hoj-edwards@agrsci.dk>
+License: GPL-2
+BugReports:
 Title: Annotation translation functions
-Author: Stefan McKinnon Edwards <stefanm.edwards@agrsci.dk>
-Maintainer: Stefan McKinnon Edwards <stefanm.edwards@agrsci.dk>
-Depends: R (>= 2.7.0), AnnotationDbi
-Suggests: org.Bt.eg.db, GO.db, hom.Hs.inp.db
+Author: Stefan McKinnon Edwards <stefan.hoj-edwards@agrsci.dk>
 Description: Functions for handling translating between different
     identifieres using the Biocore Data Team data-packages (e.g.
     org.Bt.eg.db).
-License: GPL-2
-URL: http://www.iysik.com/index.php?page=annotation-functions
-BugReports:
+Version: 1.3.0
 biocViews: AnnotationData, Software
+URL: http://www.iysik.com/index.php?page=annotation-functions
+Date: 2010-11-29
+Depends: R (>= 2.7.0), AnnotationDbi
+Suggests: org.Bt.eg.db, GO.db, org.Hs.eg.db, hom.Hs.inp.db
 Collate: 'annotation-funcs.R' 'homologe.R'

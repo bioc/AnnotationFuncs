@@ -16,7 +16,7 @@ mRNA or the protein, and they can be predicted, properties that can be read
 from the prefix (\url{http://www.ncbi.nlm.nih.gov/refseq/key.html}).  E.g. "XM_" is 
 predicted mRNA and "NP_" is a protein. Run \code{?org.Bt.egREFSEQ}.}
 \value{If vector given, returns vector.  If list given, returns list without element where nothing could be picked.}
-\author{Stefan McKinnon Edwards \email{stefanm.edwards@agrsci.dk}}
+\author{Stefan McKinnon Edwards \email{stefan.hoj-edwards@agrsci.dk}}
 \arguments{\item{l}{Vector or list of RefSeqs accessions to pick from.  If list given, applies the
 prioritation to each element in the list.}
 \item{priorities}{Character vector of prioritised prefixes to pick by. Eg. \code{c("NP","NM")}

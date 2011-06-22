@@ -1,5 +1,5 @@
 citEntry(entry = "Misc",
-	author = person(given = "Stefan", family="Edwards", middle="McKinnon", email="stefanm.edwards@agrsci.dk"),
+	author = person(given = "Stefan", family="Edwards", middle="McKinnon", email="stefan.hoj-edwards@agrsci.dk"),
 	institution,
 	year = 2011,
 	title = "Annotation translation functions for Bioconductors annotation packages",

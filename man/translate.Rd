@@ -22,7 +22,7 @@ See \code{\link{pickGO}}.}
 \note{Requires user to deliver the annotation packages such as org.Bt.egREFSEQ.}
 \value{List; names of elements are \code{values} and the elements are the translated elements,
 or \code{NULL} if not translatable with \code{remove.missing = TRUE}.}
-\author{Stefan McKinnon Edwards \email{stefanm.edwards@agrsci.dk}}
+\author{Stefan McKinnon Edwards \email{stefan.hoj-edwards@agrsci.dk}}
 \seealso{\code{\link{pickRefSeq}}, \code{\link{pickGO}}}
 \arguments{\item{values}{Vector of annotations that needs translation. Coerced to character vector.}
 \item{from}{Type of annotation \code{values} are given in. NB! take care in the       

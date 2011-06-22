@@ -8,7 +8,7 @@ biological process (BP), cellular component (CC), or molecular function (MF).
 Can be used on list of GOs from \code{\link{translate}}, or a single list of GOs from an annotation package.  
 May reduce list, if the (sub)list does not contain the chosen class!}
 \value{List with only the picked elements.}
-\author{Stefan McKinnon Edwards \email{stefanm.edwards@agrsci.dk}}
+\author{Stefan McKinnon Edwards \email{stefan.hoj-edwards@agrsci.dk}}
 \seealso{\code{\link{pickRefSeq}}, \code{\link{getEvidenceCodes}}, \code{\link{translate}}}
 \arguments{\item{l}{Character vector, or list of, og GO identifiers.}
 \item{evidence}{Character vector, filters on which kind of evidence to return; for a larger list see \code{\link{getEvidenceCodes}}. \\*

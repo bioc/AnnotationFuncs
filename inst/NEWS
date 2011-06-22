@@ -1,11 +1,13 @@
-CHANGES IN VERSION 1.1
+CHANGES IN VERSION 1.3
 ----------------------
 
 SIGNIFICANT USER-VISIBLE CHANGES
 
-	o 'translate' has added argument 'simplify' for enabling use in lapply
-	
-	o Added function 'getHomolog' for quick mapping using INPARANOID data packages.
+    o Added function 'getOrthologs' and auxcillary functions 
+	  that speeds up ortholog mappings in the Inparanoid databases.
+	  
+	o Added parameter 'simple' to 'translate' for improved 
+      usage with lapply.	
 
 CHANGES IN VERSION 1.0
 ----------------------
