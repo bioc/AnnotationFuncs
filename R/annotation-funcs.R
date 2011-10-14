@@ -400,12 +400,12 @@ pickGO <- function(l, evidence=NA, category=NA) {
     if (all(substr(names(l), 1, 3) == 'GO:')) {
 		gos <- l[which(substr(names(l), 1, 3) == 'GO:')]
 		gos <- matrix(unlist(gos, use.names=FALSE), ncol=3, byrow=TRUE)
-		if (is.na(evidence)) {
+		if (length(evidence) == 1 && is.na(evidence)) {
 			from.evi <- rep(TRUE, nrow(gos))
 		} else {
 			from.evi <- gos[,2] %in% evidence
 		}
-		if (is.na(category)) {
+		if (length(category) == 1 && is.na(category)) {
 			from.cat <- rep(TRUE, nrow(gos))
 		} else {
 			from.cat <- gos[,3] %in% category
