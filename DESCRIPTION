@@ -7,7 +7,7 @@ Author: Stefan McKinnon Edwards <stefan.hoj-edwards@agrsci.dk>
 Description: Functions for handling translating between different
     identifieres using the Biocore Data Team data-packages (e.g.
     org.Bt.eg.db).
-Version: 1.3.0
+Version: 1.4.0
 biocViews: AnnotationData, Software
 URL: http://www.iysik.com/index.php?page=annotation-functions
 Date: 2010-11-29
