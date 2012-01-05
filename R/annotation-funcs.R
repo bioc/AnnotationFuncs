@@ -212,6 +212,8 @@ translate <- function(values, from, to=NULL,
   if (return.list) {
     return(goal)
   } else {
+	if (length(goal) == 0)
+		return(data.frame(from=factor(),to=factor()))
     goal <- stack(goal)
     new.c <- c('from','to') # Matching 'ind' and 'values'.
     colnames(goal) <- new.c[match(c('ind','values'), colnames(goal))]
