@@ -1,7 +1,8 @@
 citEntry(entry = "Misc",
 	author = person(given = "Stefan", family="Edwards", middle="McKinnon", email="stefan.hoj-edwards@agrsci.dk"),
 	year = 2011,
-	title = "Annotation translation functions for Bioconductors annotation packages",
+  textVersion = 'Stefan McKinnon Edwards (2011) AnnotationFuncs: Annotation translation functions for Bioconductors annotation packages URL: http://www.iysik.com/r/annotationfuncs',
+	title = "AnnotationFuncs: Annotation translation functions for Bioconductors annotation packages",
 	url = "http://www.iysik.com/r/annotationfuncs",
 	note = "Published on website"
 )
