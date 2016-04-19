@@ -7,10 +7,11 @@ Author: Stefan McKinnon Edwards <stefan.hoj-edwards@agrsci.dk>
 Description: Functions for handling translating between different
     identifieres using the Biocore Data Team data-packages (e.g.
     org.Bt.eg.db).
-Version: 1.21.0
+Version: 1.21.1
 biocViews: AnnotationData, Software
 URL: http://www.iysik.com/index.php?page=annotation-functions
 Date: 2010-11-29
 Depends: R (>= 2.7.0), AnnotationDbi
+Imports: DBI
 Suggests: org.Bt.eg.db, GO.db, org.Hs.eg.db, hom.Hs.inp.db
 Collate: 'annotation-funcs.R' 'homologe.R'
